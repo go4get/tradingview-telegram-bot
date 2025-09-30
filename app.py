@@ -1,10 +1,11 @@
 from flask import Flask, request
-import requests, os
+import requests
 
 app = Flask(__name__)
 
-TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN", "YOUR_TOKEN")
-CHAT_ID = os.environ.get("CHAT_ID", "YOUR_CHAT_ID")
+# Your Telegram details
+TELEGRAM_TOKEN = "8395367042:AAG--avUlp1VHYzz3EQauM5GGCXzCPP7fy4"
+CHAT_ID = "6299292695"
 
 @app.route('/webhook', methods=['POST'])
 def webhook():
