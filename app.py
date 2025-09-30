@@ -3,22 +3,20 @@ import requests
 
 app = Flask(__name__)
 
-# Your Telegram details
-TELEGRAM_TOKEN = "8395367042:AAG--avUlp1VHYzz3EQauM5GGCXzCPP7fy4"
+BOT_TOKEN = "8395367042:AAG--avUlp1VHYzz3EQauM5GGCXzCPP7fy4"
 CHAT_ID = "6299292695"
 
 @app.route('/webhook', methods=['POST'])
 def webhook():
-    data = request.json
-    message = data.get("text", "🚨 New TradingView Alert")
-    
-    url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
-    payload = {
-        "chat_id": CHAT_ID,
-        "text": message
-    }
-    requests.post(url, json=payload)
-    return "ok"
+    data = None
+    try:
+        data = request.get_json(force=True)  # try parse JSON
+        message = data.get("text", "⚠️ No text in payload")
+    except:
+        # fallback if TradingView sent plain text
+        message = request.data.decode("utf-8")
 
-if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=5000)
+    url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
+    requests.post(url, json={"chat_id": CHAT_ID, "text": message})
+
+    return "ok", 200
